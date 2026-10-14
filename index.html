@@ -1,0 +1,297 @@
+<!doctype html>
+<html lang="gu">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Diamond Calc — હીરા પડતર ગણતરી</title>
+<meta name="description" content="રફ થી પોલિશ પડતર ગણતરી એપ — એક્સેલ સ્લીપ, લોટ સરખામણી, ટાર્ગેટ નફો. ₹299 / વર્ષ, 7 દિવસ ફ્રી ટ્રાયલ.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Gujarati:wght@400;600;800;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+<script src="https://checkout.razorpay.com/v1/checkout.js" defer></script>
+</head>
+<body>
+
+<header class="top">
+  <div class="wrap">
+    <a class="brand" href="./">💎 હીરા પડતર ગણતરી<small>Diamond Calc</small></a>
+    <nav><a href="#buy">ખરીદો</a><a href="#resend">કોડ ફરી મેળવો</a></nav>
+  </div>
+</header>
+
+<div class="hero">
+  <div class="wrap">
+    <span class="price-tag">₹299 / વર્ષ · 7 દિવસ ફ્રી ટ્રાયલ</span>
+    <h1>રફ થી પોલિશ પડતર — સેકન્ડોમાં</h1>
+    <p class="lead">સુરતના હીરા વેપારીઓ માટે બનાવેલી એપ. તમારી એક્સેલ શીટ જેવી જ ગણતરી, ફોનમાં. લોટ સેવ કરો, સરખાવો અને સ્લીપ WhatsApp પર શેર કરો.</p>
+    <div class="cta">
+      <a class="btn btn-yellow" href="#buy">🛒 સબ્સ્ક્રિપ્શન ખરીદો</a>
+      <a class="btn btn-ghost" id="apk-link" href="https://github.com/henilm1207/diamond-calc-releases/releases/latest/download/DiamondCalculator.apk">📥 એપ ડાઉનલોડ (Android)</a>
+    </div>
+  </div>
+</div>
+
+<section>
+  <div class="wrap">
+    <h2>એપમાં શું છે?</h2>
+    <div class="grid">
+      <div class="card feature"><div class="icon">🧮</div><h3>પડતર કેલ્ક્યુલેટર</h3><p>રફ પડતર, નેટ પડતર, માલ પડતર, $ રફ નાં થાય — એક્સેલ જેવી જ ફોર્મ્યુલા.</p></div>
+      <div class="card feature"><div class="icon">📊</div><h3>એક્સેલ સ્લીપ</h3><p>લીલી એક્સેલ સ્લીપ ઇમેજ કે PDF તરીકે WhatsApp પર મોકલો.</p></div>
+      <div class="card feature"><div class="icon">⚖️</div><h3>લોટ સરખામણી</h3><p>2–4 સેવ કરેલા લોટ સાથે સાથે — કયો વધુ ફાયદાકારક તે તરત દેખાશે.</p></div>
+      <div class="card feature"><div class="icon">🎯</div><h3>ટાર્ગેટ નફો</h3><p>જોઈતા નફા માટે રફ માટે વધુમાં વધુ કેટલો ભાવ આપી શકાય તે જાણો.</p></div>
+      <div class="card feature"><div class="icon">📋</div><h3>હિસ્ટ્રી</h3><p>લોટ સેવ, અપડેટ, કોપી અને નામ બદલો — ફોનમાં જ, ઇન્ટરનેટ વગર.</p></div>
+      <div class="card feature"><div class="icon">🔄</div><h3>ઓટો અપડેટ</h3><p>નવા ફીચર્સ આપમેળે મળતા રહેશે.</p></div>
+    </div>
+  </div>
+</section>
+
+<section id="buy">
+  <div class="wrap buy">
+    <div class="plan">
+      <div>વાર્ષિક સબ્સ્ક્રિપ્શન</div>
+      <div class="amount">₹299</div>
+      <div class="per">1 વર્ષ · 1 ફોન</div>
+      <ul>
+        <li>બધા ફીચર્સ, 1 વર્ષ સુધી</li>
+        <li>પેમેન્ટ પછી કોડ <b>તરત</b> સ્ક્રીન પર અને ઈમેલમાં</li>
+        <li>રિન્યૂ કરતાં એ જ કોડમાં 1 વર્ષ ઉમેરાશે</li>
+        <li>ખરીદતા પહેલા 7 દિવસ ફ્રી અજમાવો</li>
+        <li>UPI, કાર્ડ, નેટ બેંકિંગ — Razorpay દ્વારા સુરક્ષિત</li>
+      </ul>
+    </div>
+
+    <div class="card">
+      <form id="buy-form" novalidate>
+        <div class="tabs" role="tablist">
+          <button type="button" class="on" data-mode="new">🆕 નવું</button>
+          <button type="button" data-mode="renew">🔄 રિન્યૂ</button>
+        </div>
+
+        <div id="renew-block" hidden>
+          <label for="renewCode">તમારો હાલનો કોડ</label>
+          <input id="renewCode" name="renewCode" inputmode="numeric" autocomplete="off" placeholder="00000-00000" maxlength="11">
+          <div class="renew-info" id="renew-info"></div>
+          <div class="field-error" data-for="renewCode"></div>
+        </div>
+
+        <label for="name">નામ</label>
+        <input id="name" name="name" autocomplete="name" placeholder="તમારું નામ">
+        <div class="field-error" data-for="name"></div>
+
+        <label for="email">ઈમેલ</label>
+        <input id="email" name="email" type="email" autocomplete="email" placeholder="you@gmail.com">
+        <p class="hint">કોડ આ ઈમેલ પર આવશે</p>
+        <div class="field-error" data-for="email"></div>
+
+        <label for="phone">મોબાઇલ નંબર</label>
+        <input id="phone" name="phone" type="tel" inputmode="tel" autocomplete="tel" placeholder="98765 43210">
+        <div class="field-error" data-for="phone"></div>
+
+        <button class="btn btn-primary" id="pay-btn" type="submit" style="margin-top:14px">₹299 ચૂકવો</button>
+        <div class="form-error" id="form-error"></div>
+        <p class="secure">🔒 Razorpay દ્વારા સુરક્ષિત પેમેન્ટ</p>
+      </form>
+
+      <div class="success" id="success">
+        <div class="big">🎉</div>
+        <h2 id="success-title">પેમેન્ટ સફળ!</h2>
+        <p id="success-sub"></p>
+        <div class="code-box">
+          <div class="hint">તમારો એક્સેસ કોડ</div>
+          <div class="code" id="success-code"></div>
+          <button class="btn btn-light" type="button" id="copy-btn" style="margin-top:8px">📋 કોપી કરો</button>
+        </div>
+        <ol class="steps">
+          <li>એપ ડાઉનલોડ કરો (પહેલેથી હોય તો જરૂર નથી)</li>
+          <li>એપ ખોલો → <b>"કોડ છે?"</b> → કોડ લખો</li>
+          <li><b>એક્ટિવેટ કરો</b> દબાવો — થઈ ગયું!</li>
+        </ol>
+        <a class="btn btn-primary" href="https://github.com/henilm1207/diamond-calc-releases/releases/latest/download/DiamondCalculator.apk">📥 એપ ડાઉનલોડ કરો</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="resend">
+  <div class="wrap">
+    <div class="card" style="max-width:520px">
+      <h2>કોડ ભૂલી ગયા?</h2>
+      <p class="hint" style="margin-bottom:6px">ખરીદી વખતે આપેલું ઈમેલ લખો — કોડ ફરી ઈમેલમાં મોકલીશું.</p>
+      <form id="resend-form" novalidate>
+        <input id="resend-email" type="email" autocomplete="email" placeholder="you@gmail.com">
+        <button class="btn btn-light" type="submit" style="margin-top:10px">📧 કોડ ફરી મોકલો</button>
+        <p class="hint" id="resend-msg"></p>
+      </form>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <h2>વારંવાર પૂછાતા પ્રશ્નો</h2>
+    <details><summary>ફ્રી ટ્રાયલ કેવી રીતે મળે?</summary><p>એપ ડાઉનલોડ કરી પહેલી વાર ખોલો (ઇન્ટરનેટ ચાલુ રાખો) — 7 દિવસની ફ્રી ટ્રાયલ આપમેળે શરૂ થશે.</p></details>
+    <details><summary>એક કોડ કેટલા ફોનમાં ચાલે?</summary><p>એક કોડ એક ફોનમાં. ફોન બદલો તો WhatsApp પર જણાવો, અમે કોડ નવા ફોનમાં ખસેડી આપીશું.</p></details>
+    <details><summary>ઇન્ટરનેટ વગર ચાલે?</summary><p>હા. એક્ટિવેટ કર્યા પછી એપ 15 દિવસ સુધી ઇન્ટરનેટ વગર ચાલે છે; વચ્ચે ક્યારેક ઇન્ટરનેટ મળે ત્યારે આપમેળે ચકાસી લે છે.</p></details>
+    <details><summary>રિન્યૂ કેવી રીતે કરવું?</summary><p>ઉપર "🔄 રિન્યૂ" પસંદ કરી હાલનો કોડ લખો અને ચૂકવો. એ જ કોડમાં 1 વર્ષ ઉમેરાશે — બાકીના દિવસો જશે નહીં.</p></details>
+    <details><summary>મારો સેવ કરેલો ડેટા ક્યાં રહે છે?</summary><p>તમારા લોટ અને ગણતરી ફક્ત તમારા ફોનમાં રહે છે; અમારા સર્વર પર નથી જતાં.</p></details>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <div class="links"><a href="terms.html">Terms</a><a href="refund.html">Refund Policy</a><a href="privacy.html">Privacy</a><a href="contact.html">Contact</a></div>
+    © <span id="year"></span> Etherstar Jewels · Diamond Calc
+  </div>
+</footer>
+
+<script>
+const API = 'https://vtyowtmppbfhudrewali.supabase.co/functions/v1/payments';
+document.getElementById('year').textContent = new Date().getFullYear();
+
+// Same Damm check digit as the app: catches typos before asking the server
+const DAMM = [[0,3,1,7,5,9,8,6,4,2],[7,0,9,2,1,5,4,8,6,3],[4,2,0,6,8,7,1,3,5,9],[1,7,5,0,9,8,3,4,2,6],[6,1,2,3,0,4,5,9,7,8],[3,6,7,4,2,0,9,5,8,1],[5,8,6,9,7,2,0,1,3,4],[8,9,4,5,3,6,2,0,1,7],[9,4,3,8,6,1,7,2,0,5],[2,5,8,1,4,3,6,7,9,0]];
+const digits = (s) => (s || '').replace(/\D/g, '');
+const validCode = (s) => { const d = digits(s); if (d.length !== 10) return false; let i = 0; for (const c of d) i = DAMM[i][+c]; return i === 0; };
+const fmtCode = (s) => { const d = digits(s).slice(0, 10); return d.length > 5 ? d.slice(0, 5) + '-' + d.slice(5) : d; };
+const fmtDate = (iso) => new Date(iso).toLocaleDateString('en-GB', { day: '2-digit', month: '2-digit', year: 'numeric' });
+
+async function api(body) {
+  const res = await fetch(API, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) });
+  return res.json().catch(() => ({ ok: false, error: 'server_error' }));
+}
+
+const form = document.getElementById('buy-form');
+const payBtn = document.getElementById('pay-btn');
+const formError = document.getElementById('form-error');
+const renewBlock = document.getElementById('renew-block');
+const renewInput = document.getElementById('renewCode');
+const renewInfo = document.getElementById('renew-info');
+let mode = 'new';
+
+function setMode(next) {
+  mode = next;
+  document.querySelectorAll('.tabs button').forEach((b) => b.classList.toggle('on', b.dataset.mode === mode));
+  renewBlock.hidden = mode !== 'renew';
+  payBtn.textContent = mode === 'renew' ? '₹299 ચૂકવી રિન્યૂ કરો' : '₹299 ચૂકવો';
+}
+document.querySelectorAll('.tabs button').forEach((b) => b.addEventListener('click', () => setMode(b.dataset.mode)));
+
+function showFieldError(field, message) {
+  document.querySelectorAll('.field-error').forEach((e) => (e.textContent = e.dataset.for === field ? message : ''));
+  document.querySelectorAll('input').forEach((i) => i.classList.toggle('bad', i.name === field));
+  if (field) document.getElementById(field)?.focus();
+}
+function showFormError(msg) {
+  formError.textContent = msg || '';
+  formError.style.display = msg ? 'block' : 'none';
+}
+
+// Renew: format the code and show whose code it is and its expiry
+let renewTimer;
+renewInput.addEventListener('input', () => {
+  renewInput.value = fmtCode(renewInput.value);
+  renewInfo.className = 'renew-info';
+  clearTimeout(renewTimer);
+  const code = digits(renewInput.value);
+  if (code.length < 10) return;
+  if (!validCode(code)) { renewInfo.className = 'renew-info bad'; renewInfo.textContent = 'કોડ ખોટો લાગે છે — આંકડા ફરી તપાસો'; return; }
+  renewTimer = setTimeout(async () => {
+    const r = await api({ action: 'renew_info', code });
+    if (!r.ok) { renewInfo.className = 'renew-info bad'; renewInfo.textContent = 'આ કોડ મળ્યો નથી'; return; }
+    if (r.blocked) { renewInfo.className = 'renew-info bad'; renewInfo.textContent = 'આ કોડ બંધ છે — સપોર્ટનો સંપર્ક કરો'; return; }
+    const past = new Date(r.expiresAt) < new Date();
+    renewInfo.className = 'renew-info ok';
+    renewInfo.textContent = `✓ ${r.firstName ? r.firstName + ' — ' : ''}${past ? 'પૂરું થયું' : 'માન્ય'} ${fmtDate(r.expiresAt)}${past ? '' : ' સુધી'}`;
+  }, 300);
+});
+
+// Link from the reminder email: ?renew=4821390577
+const params = new URLSearchParams(location.search);
+if (params.get('renew')) {
+  setMode('renew');
+  renewInput.value = params.get('renew');
+  renewInput.dispatchEvent(new Event('input'));
+  document.getElementById('buy').scrollIntoView();
+}
+
+async function confirmPayment(resp) {
+  // The webhook may be finishing the same payment: retry a few times while it is "pending"
+  for (let i = 0; i < 6; i++) {
+    const r = await api({ action: 'confirm', orderId: resp.razorpay_order_id, paymentId: resp.razorpay_payment_id, signature: resp.razorpay_signature });
+    if (r.ok || r.error !== 'pending') return r;
+    await new Promise((res) => setTimeout(res, 1500));
+  }
+  return { ok: false, error: 'pending' };
+}
+
+function showSuccess(r, email) {
+  form.style.display = 'none';
+  document.getElementById('success').style.display = 'block';
+  document.getElementById('success-title').textContent = r.kind === 'renewal' ? 'રિન્યૂ સફળ! 🔄' : 'પેમેન્ટ સફળ!';
+  document.getElementById('success-sub').textContent =
+    (r.kind === 'renewal' ? 'એ જ કોડ ચાલુ રહેશે — ' : 'તમારું સબ્સ્ક્રિપ્શન ચાલુ છે — ') + fmtDate(r.expiresAt) + ' સુધી.' +
+    (r.emailed ? ` કોડ ${email} પર ઈમેલ પણ કર્યો છે.` : '');
+  document.getElementById('success-code').textContent = r.code;
+  document.getElementById('copy-btn').onclick = async () => {
+    try { await navigator.clipboard.writeText(digits(r.code)); document.getElementById('copy-btn').textContent = '✅ કોપી થયું'; } catch {}
+  };
+  document.getElementById('buy').scrollIntoView({ behavior: 'smooth' });
+}
+
+form.addEventListener('submit', async (e) => {
+  e.preventDefault();
+  showFieldError(null);
+  showFormError('');
+  const data = {
+    name: document.getElementById('name').value,
+    email: document.getElementById('email').value,
+    phone: document.getElementById('phone').value,
+    renewCode: mode === 'renew' ? digits(renewInput.value) : '',
+  };
+  if (mode === 'renew' && !validCode(data.renewCode)) return showFieldError('renewCode', 'હાલનો 10 આંકડાનો કોડ લખો');
+  if (!window.Razorpay) return showFormError('પેમેન્ટ લોડ થઈ રહ્યું છે — થોડી સેકન્ડ પછી ફરી દબાવો.');
+
+  payBtn.disabled = true;
+  const order = await api({ action: 'create_order', ...data });
+  payBtn.disabled = false;
+  if (!order.ok) {
+    if (order.field) return showFieldError(order.field, order.message);
+    return showFormError('સર્વરમાં સમસ્યા છે. થોડી વાર પછી ફરી પ્રયાસ કરો.');
+  }
+
+  const rzp = new Razorpay({
+    key: order.keyId,
+    order_id: order.orderId,
+    amount: order.amount,
+    currency: 'INR',
+    name: 'Diamond Calc',
+    description: mode === 'renew' ? '1 વર્ષ રિન્યૂ' : 'વાર્ષિક સબ્સ્ક્રિપ્શન',
+    prefill: { name: order.name, email: order.email, contact: '+91' + order.phone },
+    theme: { color: '#445624' },
+    handler: async (resp) => {
+      payBtn.disabled = true;
+      payBtn.textContent = 'કોડ બની રહ્યો છે…';
+      const r = await confirmPayment(resp);
+      payBtn.disabled = false;
+      setMode(mode);
+      if (r.ok) return showSuccess(r, order.email);
+      showFormError('પેમેન્ટ મળ્યું છે. કોડ થોડી મિનિટમાં ઈમેલમાં આવશે — ન આવે તો WhatsApp પર જણાવો. Payment ID: ' + resp.razorpay_payment_id);
+    },
+  });
+  rzp.on('payment.failed', (resp) => showFormError('પેમેન્ટ નિષ્ફળ: ' + (resp.error?.description || 'ફરી પ્રયાસ કરો')));
+  rzp.open();
+});
+
+document.getElementById('resend-form').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const email = document.getElementById('resend-email').value.trim();
+  const msg = document.getElementById('resend-msg');
+  if (!email.includes('@')) { msg.textContent = 'ઈમેલ લખો'; return; }
+  msg.textContent = 'મોકલી રહ્યા છીએ…';
+  await api({ action: 'resend_code', email });
+  msg.textContent = 'જો આ ઈમેલથી ખરીદી થઈ હશે તો કોડ થોડી મિનિટમાં આવી જશે (Spam ફોલ્ડર પણ જુઓ).';
+});
+</script>
+</body>
+</html>
