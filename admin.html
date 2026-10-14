@@ -1,0 +1,343 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Diamond Calc Admin</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Gujarati:wght@400;600;800;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script>
+<style>
+  .admin { padding: 20px 0 48px; }
+  .admin h2 { font-size: 20px; margin: 22px 0 10px; }
+  .hidden { display: none !important; }
+  .panel { background: var(--card); border: 1px solid var(--border); border-radius: var(--radius); padding: 16px; }
+  .login { max-width: 380px; margin: 40px auto; }
+  label { display: block; font-size: 13px; font-weight: 600; margin: 10px 0 4px; }
+  input[type=text], input[type=email], input[type=password], input[type=tel], input[type=number], textarea, select {
+    width: 100%; font: inherit; font-size: 15px; padding: 9px 11px; border: 1px solid var(--border); border-radius: 9px; background: #fff; color: var(--text);
+  }
+  textarea { min-height: 60px; resize: vertical; }
+  .row { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; }
+  .row > * { flex: 1 1 160px; }
+  .msg { font-size: 14px; margin-top: 10px; }
+  .msg.err { color: var(--error); }
+  .msg.ok { color: var(--success); }
+  .stats { display: grid; gap: 10px; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); }
+  .stat { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 12px; }
+  .stat b { display: block; font-size: 24px; font-variant-numeric: tabular-nums; }
+  .stat span { font-size: 12px; color: var(--muted); }
+  .chips { display: flex; gap: 6px; flex-wrap: wrap; margin: 10px 0; }
+  .chip { border: 1px solid var(--border); background: #fff; border-radius: 999px; padding: 5px 12px; font: inherit; font-size: 13px; cursor: pointer; }
+  .chip.on { background: var(--olive-dark); color: #fff; border-color: var(--olive-dark); }
+  .list { display: grid; gap: 10px; }
+  .lic { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 12px 14px; }
+  .lic-head { display: flex; gap: 8px; align-items: baseline; flex-wrap: wrap; }
+  .lic-head .name { font-weight: 800; font-size: 16px; }
+  .code { font-family: ui-monospace, Consolas, monospace; font-weight: 700; letter-spacing: 1px; }
+  .badge { font-size: 12px; font-weight: 700; border-radius: 999px; padding: 2px 9px; }
+  .b-active { background: #d1fae5; color: #065f46; }
+  .b-expiring { background: #fef3c7; color: #92400e; }
+  .b-expired { background: #fee2e2; color: #991b1b; }
+  .b-blocked { background: #1f2937; color: #fff; }
+  .b-life { background: #ede9fe; color: #5b21b6; }
+  .meta { font-size: 13px; color: var(--muted); margin-top: 4px; overflow-wrap: anywhere; }
+  .meta b { color: var(--text); font-weight: 600; }
+  .actions { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 10px; }
+  .actions button, .actions a, .small-btn {
+    font: inherit; font-size: 13px; font-weight: 700; border: 1px solid var(--border); background: #f9fafb; color: var(--text);
+    border-radius: 8px; padding: 6px 10px; cursor: pointer; text-decoration: none;
+  }
+  .actions .danger { color: var(--error); }
+  .actions .wa { color: var(--success); }
+  .result { margin-top: 12px; padding: 12px; border: 2px dashed var(--olive-dark); border-radius: 12px; background: #f7f9f2; }
+  .result .code { font-size: 26px; }
+  .muted { color: var(--muted); font-size: 13px; }
+  pre.due { white-space: pre-wrap; font-size: 13px; background: #f9fafb; border-radius: 8px; padding: 10px; margin: 10px 0 0; }
+  .top .who { color: #e5ecd6; font-size: 13px; }
+  .top .who button { margin-left: 8px; font: inherit; font-size: 13px; background: transparent; color: var(--yellow); border: 1px solid rgba(255,255,255,.5); border-radius: 8px; padding: 3px 9px; cursor: pointer; }
+</style>
+</head>
+<body>
+
+<header class="top">
+  <div class="wrap">
+    <a class="brand" href="./">💎 Diamond Calc<small>Admin</small></a>
+    <span class="who hidden" id="who"><span id="who-email"></span><button id="logout">Log out</button></span>
+  </div>
+</header>
+
+<main class="wrap admin">
+
+  <!-- Login -->
+  <div class="panel login hidden" id="login-view">
+    <h2 style="margin-top:0">Owner login</h2>
+    <form id="login-form">
+      <label for="l-email">Email</label>
+      <input type="email" id="l-email" autocomplete="username" required>
+      <label for="l-pass">Password</label>
+      <input type="password" id="l-pass" autocomplete="current-password" required>
+      <button class="btn btn-primary" style="margin-top:14px" type="submit">Log in</button>
+      <div class="msg err" id="login-msg"></div>
+    </form>
+  </div>
+
+  <div class="hidden" id="app-view">
+
+    <div class="stats" id="stats"></div>
+
+    <h2>Customers</h2>
+    <div class="row">
+      <input type="text" id="q" placeholder="Search code, name, email, phone, notes…">
+    </div>
+    <div class="chips" id="filters">
+      <button class="chip on" data-f="">All</button>
+      <button class="chip" data-f="active">Active</button>
+      <button class="chip" data-f="expiring">Expiring ≤ 15 days</button>
+      <button class="chip" data-f="expired">Expired</button>
+      <button class="chip" data-f="blocked">Blocked</button>
+      <button class="chip" data-f="manual">Free / manual</button>
+    </div>
+    <div class="msg" id="list-msg"></div>
+    <div class="list" id="list"></div>
+
+    <h2>Create a free code</h2>
+    <form class="panel" id="create-form">
+      <div class="row">
+        <div><label for="c-name">Name *</label><input type="text" id="c-name" required></div>
+        <div><label for="c-phone">Phone</label><input type="tel" id="c-phone"></div>
+      </div>
+      <div class="row">
+        <div><label for="c-email">Email</label><input type="email" id="c-email"></div>
+        <div><label for="c-plan">Plan</label>
+          <select id="c-plan"><option value="1y">1 year (free)</option><option value="lifetime">Lifetime (till 31/12/2099)</option></select>
+        </div>
+      </div>
+      <label for="c-notes">Notes</label>
+      <textarea id="c-notes" placeholder="e.g. Friend of Rameshbhai"></textarea>
+      <label style="font-weight:400"><input type="checkbox" id="c-send" checked> Email the code to the customer</label>
+      <button class="btn btn-primary" style="margin-top:12px" type="submit">Create code</button>
+      <div class="msg" id="create-msg"></div>
+      <div class="result hidden" id="create-result"></div>
+    </form>
+
+    <h2>Renewal reminders</h2>
+    <div class="panel">
+      <p class="muted" style="margin-top:0">Sent automatically every day at 09:00: a “renew soon” email 15 days before expiry, and an “expired” email after it. Each is sent once. Lifetime and blocked codes get none.</p>
+      <div class="actions">
+        <button id="rem-preview">Preview who is due</button>
+        <button id="rem-send">Send due emails now</button>
+      </div>
+      <pre class="due hidden" id="rem-out"></pre>
+    </div>
+
+  </div>
+</main>
+
+<script>
+// Public (publishable / anon) key of the Supabase project: Dashboard → Project Settings → API Keys.
+// It is safe in a web page; every admin action is checked on the server against ADMIN_EMAILS.
+const SUPABASE_URL = 'https://vtyowtmppbfhudrewali.supabase.co';
+const SUPABASE_ANON_KEY = 'sb_publishable_cGc4DjRNb-QSrrNrLdeBCQ_6l8LbN4o';
+const API = SUPABASE_URL + '/functions/v1/admin';
+
+const $ = (id) => document.getElementById(id);
+const esc = (s) => String(s ?? '').replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c]);
+const fmtCode = (c) => String(c).slice(0, 5) + '-' + String(c).slice(5);
+const fmtDate = (d) => d ? new Date(d).toLocaleDateString('en-GB', { day: '2-digit', month: '2-digit', year: 'numeric', timeZone: 'Asia/Kolkata' }) : '—';
+const DAY = 86400000;
+
+if (!SUPABASE_ANON_KEY) {
+  document.querySelector('main').innerHTML = '<div class="panel login"><b>Setup needed:</b> paste the Supabase publishable key into <code>SUPABASE_ANON_KEY</code> in admin.html.</div>';
+  throw new Error('SUPABASE_ANON_KEY missing');
+}
+const sb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+async function call(action, data = {}) {
+  const { data: s } = await sb.auth.getSession();
+  if (!s.session) { showLogin(); throw new Error('Not logged in'); }
+  const res = await fetch(API, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', Authorization: 'Bearer ' + s.session.access_token },
+    body: JSON.stringify({ action, ...data }),
+  });
+  const body = await res.json().catch(() => ({ ok: false, error: 'server_error' }));
+  if (res.status === 403) throw new Error('This login is not an admin (check ADMIN_EMAILS).');
+  if (!body.ok) throw new Error(body.message || body.error || 'Something went wrong');
+  return body;
+}
+
+// ---------- login ----------
+function showLogin() { $('login-view').classList.remove('hidden'); $('app-view').classList.add('hidden'); $('who').classList.add('hidden'); }
+function showApp(email) {
+  $('login-view').classList.add('hidden'); $('app-view').classList.remove('hidden');
+  $('who').classList.remove('hidden'); $('who-email').textContent = email;
+  loadStats(); loadList();
+}
+$('login-form').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  $('login-msg').textContent = '';
+  const { data, error } = await sb.auth.signInWithPassword({ email: $('l-email').value.trim(), password: $('l-pass').value });
+  if (error) { $('login-msg').textContent = error.message; return; }
+  showApp(data.user.email);
+});
+$('logout').addEventListener('click', async () => { await sb.auth.signOut(); showLogin(); });
+
+// ---------- stats ----------
+async function loadStats() {
+  try {
+    const s = await call('stats');
+    const tiles = [
+      [s.active, 'Active codes'], [s.expiring, 'Expiring ≤ 15 days'], [s.expired, 'Expired'],
+      [s.blocked, 'Blocked'], [s.trials7d, 'New trials (7 days)'], ['₹' + s.monthRupees.toLocaleString('en-IN'), s.monthPayments + ' payments this month'],
+    ];
+    $('stats').innerHTML = tiles.map(([v, l]) => `<div class="stat"><b>${esc(v)}</b><span>${esc(l)}</span></div>`).join('');
+  } catch (e) { $('stats').innerHTML = `<div class="msg err">${esc(e.message)}</div>`; }
+}
+
+// ---------- list ----------
+let filter = '';
+let rows = [];
+function badge(l) {
+  const t = new Date(l.expires_at).getTime();
+  if (l.status === 'blocked') return '<span class="badge b-blocked">Blocked</span>';
+  if (new Date(l.expires_at).getUTCFullYear() >= 2090) return '<span class="badge b-life">Lifetime</span>';
+  if (t <= Date.now()) return '<span class="badge b-expired">Expired</span>';
+  if (t - Date.now() <= 15 * DAY) return '<span class="badge b-expiring">Expiring</span>';
+  return '<span class="badge b-active">Active</span>';
+}
+function waLink(l) {
+  const phone = String(l.phone || '').replace(/\D/g, '');
+  if (!phone) return '';
+  const to = phone.length === 10 ? '91' + phone : phone;
+  const msg = `નમસ્તે ${l.name || ''},\nતમારો Diamond Calc કોડ: ${fmtCode(l.code)}\nમાન્ય: ${fmtDate(l.expires_at)} સુધી`;
+  return `<a class="wa" target="_blank" rel="noopener" href="https://wa.me/${to}?text=${encodeURIComponent(msg)}">💬 WhatsApp</a>`;
+}
+function card(l) {
+  const phoneLine = l.device_id
+    ? `📱 <b>${esc(l.device_model || 'Phone')}</b> · activated ${fmtDate(l.activated_at)} · last seen ${fmtDate(l.last_seen_at)}`
+    : '📱 <i>not activated on any phone yet</i>';
+  return `<div class="lic" data-id="${esc(l.id)}">
+    <div class="lic-head"><span class="name">${esc(l.name || '(no name)')}</span><span class="code">${fmtCode(l.code)}</span>${badge(l)}</div>
+    <div class="meta">Valid till <b>${fmtDate(l.expires_at)}</b> · ${l.source === 'razorpay' ? 'paid' : 'free / manual'} · created ${fmtDate(l.created_at)}</div>
+    <div class="meta">${esc(l.email || 'no email')} · ${esc(l.phone || 'no phone')}</div>
+    <div class="meta">${phoneLine}</div>
+    ${l.notes ? `<div class="meta">📝 ${esc(l.notes)}</div>` : ''}
+    <div class="actions">
+      <button data-act="copy">📋 Copy code</button>
+      ${waLink(l)}
+      ${l.device_id ? '<button data-act="reset">🔄 Reset phone</button>' : ''}
+      <button data-act="extend">➕ Extend</button>
+      <button data-act="resend"${l.email ? '' : ' disabled'}>✉️ Resend email</button>
+      <button data-act="edit">✏️ Edit</button>
+      <button data-act="block" class="danger">${l.status === 'blocked' ? '✅ Unblock' : '⛔ Block'}</button>
+    </div>
+  </div>`;
+}
+function render() {
+  $('list').innerHTML = rows.map(card).join('');
+  $('list-msg').textContent = rows.length ? (rows.length >= 200 ? 'Showing the newest 200 — search to narrow down.' : rows.length + ' customer(s)') : 'No customers found.';
+}
+async function loadList() {
+  $('list-msg').className = 'msg';
+  $('list-msg').textContent = 'Loading…';
+  try { rows = (await call('list', { q: $('q').value, filter })).licenses; render(); }
+  catch (e) { $('list-msg').className = 'msg err'; $('list-msg').textContent = e.message; }
+}
+let searchTimer;
+$('q').addEventListener('input', () => { clearTimeout(searchTimer); searchTimer = setTimeout(loadList, 300); });
+$('filters').addEventListener('click', (e) => {
+  const b = e.target.closest('.chip'); if (!b) return;
+  filter = b.dataset.f;
+  document.querySelectorAll('#filters .chip').forEach((c) => c.classList.toggle('on', c === b));
+  loadList();
+});
+
+function replaceRow(l) { rows = rows.map((r) => (r.id === l.id ? l : r)); render(); loadStats(); }
+
+$('list').addEventListener('click', async (e) => {
+  const btn = e.target.closest('button[data-act]'); if (!btn) return;
+  const id = btn.closest('.lic').dataset.id;
+  const l = rows.find((r) => r.id === id);
+  const who = `${l.name || ''} (${fmtCode(l.code)})`;
+  try {
+    switch (btn.dataset.act) {
+      case 'copy':
+        await navigator.clipboard.writeText(fmtCode(l.code));
+        btn.textContent = '✔ Copied'; setTimeout(() => (btn.textContent = '📋 Copy code'), 1500);
+        return;
+      case 'reset':
+        if (!confirm(`Reset phone for ${who}?\n\nThe old phone loses access at its next check; the customer can then enter the code on the new phone.`)) return;
+        replaceRow((await call('reset_device', { id })).license); alert('Done. Ask the customer to enter the code on the new phone.');
+        return;
+      case 'extend': {
+        const d = prompt(`Add how many days to ${who}?\n(365 = one year)`, '365');
+        if (!d) return;
+        replaceRow((await call('extend', { id, days: Number(d) })).license);
+        return;
+      }
+      case 'resend':
+        if (!confirm(`Email the code again to ${l.email}?`)) return;
+        await call('resend', { id }); alert('Email sent.');
+        return;
+      case 'edit': {
+        const name = prompt('Name', l.name || ''); if (name === null) return;
+        const email = prompt('Email', l.email || ''); if (email === null) return;
+        const phone = prompt('Phone', l.phone || ''); if (phone === null) return;
+        const notes = prompt('Notes', l.notes || ''); if (notes === null) return;
+        replaceRow((await call('update', { id, name, email, phone, notes })).license);
+        return;
+      }
+      case 'block': {
+        const blocking = l.status !== 'blocked';
+        if (!confirm(blocking ? `Block ${who}?\n\nThe app locks at the phone's next daily check (within ~24 hours).` : `Unblock ${who}?`)) return;
+        replaceRow((await call('set_status', { id, status: blocking ? 'blocked' : 'active' })).license);
+        return;
+      }
+    }
+  } catch (err) { alert(err.message); }
+});
+
+// ---------- create ----------
+$('create-form').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const msg = $('create-msg'); msg.className = 'msg'; msg.textContent = 'Creating…';
+  $('create-result').classList.add('hidden');
+  try {
+    const r = await call('create', {
+      name: $('c-name').value, email: $('c-email').value, phone: $('c-phone').value,
+      plan: $('c-plan').value, notes: $('c-notes').value, sendEmail: $('c-send').checked,
+    });
+    const l = r.license;
+    msg.className = 'msg ok';
+    msg.textContent = r.emailed ? `Created and emailed to ${l.email}.` : 'Created.' + ($('c-send').checked && l.email ? ' (email could not be sent)' : '');
+    $('create-result').innerHTML = `<div class="muted">Code for ${esc(l.name)} · valid till ${fmtDate(l.expires_at)}</div>
+      <div class="code">${fmtCode(l.code)}</div>
+      <div class="actions"><button type="button" class="small-btn" id="copy-new">📋 Copy</button>${waLink(l)}</div>`;
+    $('create-result').classList.remove('hidden');
+    $('copy-new').onclick = () => navigator.clipboard.writeText(fmtCode(l.code));
+    e.target.reset(); $('c-send').checked = true;
+    loadList(); loadStats();
+  } catch (err) { msg.className = 'msg err'; msg.textContent = err.message; }
+});
+
+// ---------- reminders ----------
+async function reminders(dryRun) {
+  const out = $('rem-out'); out.classList.remove('hidden'); out.textContent = 'Working…';
+  try {
+    const r = await call('run_reminders', { dryRun });
+    const lines = r.due.map((d) => `${d.kind === 'reminder' ? '⏰ renew soon' : '🔒 expired   '}  ${fmtCode(d.code)}  ${d.email}  (${fmtDate(d.expiresAt)})`);
+    out.textContent = (dryRun ? `${r.due.length} email(s) due today.` : `Sent: ${r.reminders} reminder(s), ${r.expired} expired notice(s). Failed: ${r.failed}.`) + (lines.length ? '\n\n' + lines.join('\n') : '');
+  } catch (err) { out.textContent = err.message; }
+}
+$('rem-preview').addEventListener('click', () => reminders(true));
+$('rem-send').addEventListener('click', () => { if (confirm('Send all due reminder emails now?')) reminders(false); });
+
+// ---------- start ----------
+sb.auth.getSession().then(({ data }) => (data.session ? showApp(data.session.user.email) : showLogin()));
+</script>
+</body>
+</html>
