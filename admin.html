@@ -216,9 +216,23 @@ function waLink(l) {
   const msg = `નમસ્તે ${l.name || ''},\nતમારો Diamond Calc કોડ: ${fmtCode(l.code)}\nમાન્ય: ${fmtDate(l.expires_at)} સુધી`;
   return `<a class="wa" target="_blank" rel="noopener" href="https://wa.me/${to}?text=${encodeURIComponent(msg)}">💬 WhatsApp</a>`;
 }
+// App version the phone last checked in with ("1.0.6+01a13f08"); none = an app too old to send it
+let latestVersion = null;
+const verNum = (v) => String(v).split('.').map((n) => parseInt(n, 10) || 0);
+function isOlder(a, b) {
+  const x = verNum(a), y = verNum(b);
+  for (let i = 0; i < Math.max(x.length, y.length); i++) if ((x[i] || 0) !== (y[i] || 0)) return (x[i] || 0) < (y[i] || 0);
+  return false;
+}
+function appVersionTag(l) {
+  const apk = l.app_version ? l.app_version.split('+')[0] : '';
+  if (!apk) return ' · <span class="badge b-expired">જૂનું વર્ઝન</span>';
+  const old = latestVersion && isOlder(apk, latestVersion);
+  return ` · app v${esc(apk)}${old ? ' <span class="badge b-expired">જૂનું વર્ઝન</span>' : ''}`;
+}
 function card(l) {
   const phoneLine = l.device_id
-    ? `📱 <b>${esc(l.device_model || 'Phone')}</b> · activated ${fmtDate(l.activated_at)} · last seen ${fmtDate(l.last_seen_at)}`
+    ? `📱 <b>${esc(l.device_model || 'Phone')}</b> · activated ${fmtDate(l.activated_at)} · last seen ${fmtDate(l.last_seen_at)}${appVersionTag(l)}`
     : '📱 <i>not activated on any phone yet</i>';
   return `<div class="lic" data-id="${esc(l.id)}">
     <div class="lic-head"><span class="name">${esc(l.name || '(no name)')}</span><span class="code">${fmtCode(l.code)}</span>${badge(l)}</div>
@@ -244,7 +258,7 @@ function render() {
 async function loadList() {
   $('list-msg').className = 'msg';
   $('list-msg').textContent = 'Loading…';
-  try { rows = (await call('list', { q: $('q').value, filter })).licenses; render(); }
+  try { const res = await call('list', { q: $('q').value, filter }); rows = res.licenses; latestVersion = res.latestVersion || null; render(); }
   catch (e) { $('list-msg').className = 'msg err'; $('list-msg').textContent = e.message; }
 }
 let searchTimer;
