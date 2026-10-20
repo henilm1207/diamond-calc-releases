@@ -104,6 +104,13 @@
     <div class="msg" id="list-msg"></div>
     <div class="list" id="list"></div>
 
+    <h2>Free trials</h2>
+    <div class="row">
+      <input type="tel" id="tq" placeholder="Search mobile number…">
+    </div>
+    <div class="msg" id="trial-msg"></div>
+    <div class="list" id="trials"></div>
+
     <h2>Create a free code</h2>
     <form class="panel" id="create-form">
       <div class="row">
@@ -175,7 +182,7 @@ function showLogin() { $('login-view').classList.remove('hidden'); $('app-view')
 function showApp(email) {
   $('login-view').classList.add('hidden'); $('app-view').classList.remove('hidden');
   $('who').classList.remove('hidden'); $('who-email').textContent = email;
-  loadStats(); loadList();
+  loadStats(); loadList(); loadTrials();
 }
 $('login-form').addEventListener('submit', async (e) => {
   e.preventDefault();
@@ -314,6 +321,36 @@ $('list').addEventListener('click', async (e) => {
     }
   } catch (err) { alert(err.message); }
 });
+
+// ---------- trials ----------
+const TRIAL_DAYS = 1;
+function trialCard(t) {
+  const ends = new Date(t.started_at).getTime() + TRIAL_DAYS * DAY;
+  const status = t.bought ? '<span class="badge b-active">Bought</span>'
+    : ends > Date.now() ? '<span class="badge b-expiring">Trial running</span>'
+    : '<span class="badge b-expired">Trial ended</span>';
+  // Trials started before mobile numbers were asked have no phone
+  const wa = t.phone && !t.bought
+    ? `<div class="actions"><a class="wa" target="_blank" rel="noopener" href="https://wa.me/91${esc(t.phone)}?text=${encodeURIComponent('નમસ્તે,\nDiamond Calc ની ફ્રી ટ્રાયલ કેવી લાગી? ₹299 / વર્ષમાં ચાલુ રાખવા: https://diamond.etherstarjewels.com')}">💬 WhatsApp</a></div>`
+    : '';
+  return `<div class="lic">
+    <div class="lic-head"><span class="name">${t.phone ? esc(t.phone.slice(0, 5) + ' ' + t.phone.slice(5)) : '<i>no number (old trial)</i>'}</span>${status}</div>
+    <div class="meta">Started <b>${fmtDate(t.started_at)}</b> · ends ${fmtDate(ends)} · last seen ${fmtDate(t.last_seen_at)}</div>
+    <div class="meta">📱 <b>${esc(t.device_model || 'Phone')}</b>${t.app_version ? ' · app v' + esc(t.app_version.split('+')[0]) : ''}</div>
+    ${wa}
+  </div>`;
+}
+async function loadTrials() {
+  $('trial-msg').className = 'msg';
+  $('trial-msg').textContent = 'Loading…';
+  try {
+    const { trials } = await call('trials', { q: $('tq').value });
+    $('trials').innerHTML = trials.map(trialCard).join('');
+    $('trial-msg').textContent = trials.length ? (trials.length >= 200 ? 'Showing the newest 200 — search to narrow down.' : trials.length + ' trial(s)') : 'No trials found.';
+  } catch (e) { $('trial-msg').className = 'msg err'; $('trial-msg').textContent = e.message; }
+}
+let trialTimer;
+$('tq').addEventListener('input', () => { clearTimeout(trialTimer); trialTimer = setTimeout(loadTrials, 300); });
 
 // ---------- create ----------
 $('create-form').addEventListener('submit', async (e) => {
